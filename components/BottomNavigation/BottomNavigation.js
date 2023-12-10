@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import SvgUri from 'react-native-svg-uri';
 import { styles } from './BottomNavigation.styles';
 
@@ -21,7 +21,7 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 onPress={() => onSelectTab('add')}
             >
                 <SvgUri style={styles.menuSvgIcon}
-                    source={require('../../assets/icon/circle.svg')}
+                    source={require('../../assets/icon/home.svg')}
                 />
             </TouchableOpacity>
 

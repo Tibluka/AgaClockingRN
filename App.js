@@ -6,7 +6,7 @@ import Charts from './screens/Charts/Charts';
 import Home from './screens/Home/Home';
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('add');
 
   const handleTabSelect = (tab) => {
     setActiveTab(tab);
@@ -17,9 +17,9 @@ const App = () => {
   const renderScreen = () => {
     switch (activeTab) {
       case 'home':
-        return <Home />;
-      case 'add':
         return <Charts />;
+      case 'add':
+        return <Home />;
       case 'monthly':
         return <Calendar />;
       default:
