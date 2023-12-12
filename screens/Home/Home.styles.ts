@@ -7,7 +7,11 @@ export const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'flex-start'
+    },
+    title: {
+        fontSize: 20,
+        marginBottom: 24
     },
     button: {
         position: 'absolute',
@@ -30,4 +34,12 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
     },
+    shift: {
+        height: 60,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexDirection: 'row'
+    }
 });

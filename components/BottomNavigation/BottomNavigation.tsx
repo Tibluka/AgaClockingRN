@@ -1,6 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import SvgUri from 'react-native-svg-uri';
+import { TouchableOpacity, View, Image } from 'react-native';
 import { styles } from './BottomNavigation.styles';
 
 
@@ -11,8 +10,8 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'home' && styles.activeTab]}
                 onPress={() => onSelectTab('home')}
             >
-                <SvgUri style={styles.menuSvgIcon}
-                    source={require('../../assets/icon/graphics-icon.svg')}
+                <Image
+                    source={require('../../assets/icon/graphics-icon.png')}
                 />
             </TouchableOpacity>
 
@@ -20,8 +19,8 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'add' && styles.activeTab]}
                 onPress={() => onSelectTab('add')}
             >
-                <SvgUri style={styles.menuSvgIcon}
-                    source={require('../../assets/icon/home.svg')}
+                <Image
+                    source={require('../../assets/icon/home.png')}
                 />
             </TouchableOpacity>
 
@@ -29,8 +28,8 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'monthly' && styles.activeTab]}
                 onPress={() => onSelectTab('monthly')}
             >
-                <SvgUri style={styles.menuSvgIcon}
-                    source={require('../../assets/icon/calendar-icon.svg')}
+                <Image
+                    source={require('../../assets/icon/calendar-icon.png')}
                 />
             </TouchableOpacity>
         </View>

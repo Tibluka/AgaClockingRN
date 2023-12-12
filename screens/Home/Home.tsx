@@ -1,12 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, FlatList } from 'react-native';
-import { styles } from './Home.styles';
-import SvgUri from 'react-native-svg-uri';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { Modal, Text, TouchableOpacity, View, Image } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
+import { UserStore } from '../../zustand/User';
+import { styles } from './Home.styles';
+import 'moment/locale/pt-br'; // Importa a localização para português do Brasil
+
 
 const Home = () => {
+    moment.locale('pt-br'); // Define a localização como português do Brasil
+
     const [modalVisible, setModalVisible] = useState(false);
     const [shifts, setShifts] = useState([]);
+    const currentDate = moment().format('YYYY-MM-DD');
+
+
+    const { user } = UserStore();
 
     const openModal = () => {
         setModalVisible(true);
@@ -19,10 +29,10 @@ const Home = () => {
     useEffect(() => {
         const fetchShifts = async () => {
             try {
-                const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJMdWNhcyBHb21lcyIsInVzZXJUeXBlIjoiQURNSU4iLCJfaWQiOiI2MzZlNDNiMWVkOTVmYzgwODcyYTdiM2EifSwiZXhwaXJhdGlvbiI6IjIwMjMtMTItMTEgMDM6NTQ6MTkuOTA3OTYzIn0.7hqOKlD5iR8dlq9dosimgh-DaiFA2GueuYCxm4uZOGk';
+                const token = await AsyncStorage.getItem('agc_token');
 
                 const response = await fetch(
-                    'https://agaclocking.onrender.com/list-shifts?date=2023-12-10&userId=636e43b1ed95fc80872a7b3a',
+                    `https://agaclocking.onrender.com/list-shifts?date=${moment(currentDate).format('YYYY-MM-DD')}&userId=${user.id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -43,30 +53,30 @@ const Home = () => {
         };
 
         fetchShifts();
-    }, []);
+        console.log(user);
+
+    }, [user]);
 
     return (
         <View style={styles.container}>
-            <Text>Home</Text>
+            <Text style={styles.title}>{moment(currentDate).format('ddd DD/MM/YYYY')}</Text>
 
-            <TouchableOpacity style={styles.button} onPress={openModal}>
-                <SvgUri
-                    style={styles.menuSvgIcon}
-                    source={require('../../assets/icon/add-shift.svg')}
-                />
-            </TouchableOpacity>
-
-            <Text>Lista de Turnos:</Text>
             {
-                (shifts && shifts.length > 0) ? shifts.map((shift) => (
-                    <View key={shift._id.$oid}>
-                        <Text>{shift.activity}</Text>
+                (shifts && shifts.length > 0) ? shifts.map((shift, index) => (
+                    <View style={styles.shift} key={shift._id.$oid}>
+                        <Text>{shift.project}</Text>
                     </View>
                 )) :
                     <View>
-                        <Text>Nao tem shift</Text>
+                        <Text>Nenhum turno registrado</Text>
                     </View>
             }
+
+            <TouchableOpacity style={styles.button} onPress={openModal}>
+                <Image
+                    source={require('../../assets/icon/add-shift.png')}
+                />
+            </TouchableOpacity>
 
             <Modal
                 animationType="fade"
