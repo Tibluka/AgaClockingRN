@@ -37,7 +37,17 @@ export const styles = StyleSheet.create({
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        padding: 10,
+        img: {
+            width: 20,
+            height: 20,
+            marginRight: 16
+        }
+    },
+    projectName: {
+        display: 'flex',
         flexDirection: 'row'
     },
     header: {

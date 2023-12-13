@@ -35,11 +35,20 @@ const Home = () => {
         setCurrentDate(moment(newDate).format('YYYY-MM-DD'));
     }
 
+    const calculateDifference = (startShiftDate, endShiftDate) => {
+        const startShift = moment(startShiftDate);
+        const endShift = moment(endShiftDate);
+
+        const minutesDifference = endShift.diff(startShift, 'minutes');
+        const hours = Math.floor(minutesDifference / 60);
+        const minutes = minutesDifference % 60;
+
+        return `${hours}:${minutes < 10 ? '0' : ''}${minutes}h`;
+    };
+
     useEffect(() => {
         const listShifts = async () => {
             const shifts = await shiftService.setShiftList(currentDate);
-            console.log(shifts);
-
             setShifts(shifts);
         }
         listShifts();
@@ -66,7 +75,35 @@ const Home = () => {
             {
                 (shifts && shifts.length > 0) ? shifts.map((shift, index) => (
                     <View style={styles.shift} key={shift._id.$oid}>
-                        <Text>{shift.project}</Text>
+                        <View style={styles.projectName}>
+                            {
+                                !shift.finished ?
+                                    (
+                                        <Image style={styles.shift.img}
+                                            source={require('../../assets/icon/power-off.png')}
+                                        />
+                                    )
+                                    :
+                                    (
+                                        <Image style={styles.shift.img}
+                                            source={require('../../assets/icon/check.png')}
+                                        />
+                                    )
+                            }
+                            <Text>{shift.project}</Text>
+                        </View>
+                        <View>
+                            <Text>{moment(shift.startShift).format('HH:mm')}</Text>
+                        </View>
+
+                        <View>
+                            {
+                                shift.finished ?
+                                    (<Text>{calculateDifference(shift.startShift, shift.endShift)}</Text>)
+                                    :
+                                    (<Text>Em aberto</Text>)
+                            }
+                        </View>
                     </View>
                 )) :
                     <View>
