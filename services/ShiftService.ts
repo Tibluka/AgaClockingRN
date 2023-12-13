@@ -17,7 +17,6 @@ const setShiftList = async (date: string) => {
         return data.shifts;
 
     } catch (error) {
-
         throw error; // Você pode escolher lidar com o erro aqui ou deixar que quem chama lide com isso.
     }
 }
