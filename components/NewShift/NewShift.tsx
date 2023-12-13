@@ -38,7 +38,6 @@ const NewShift = () => {
     const currentDate = moment().format('DD/MM/YYYY');
     const [projectList, setProjectList] = useState([]);
     const [form, setForm] = useState(null);
-    const [selectedLanguage, setSelectedLanguage] = useState();
 
     const handlePickerChange = (value) => {
         console.log(value);
@@ -65,18 +64,22 @@ const NewShift = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Registrar</Text>
+                <Text>{currentDate}</Text>
             </View>
 
             <View style={styles.form}>
-                <Text>teste</Text>
-                <Picker
-                    selectedValue={selectedLanguage}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setSelectedLanguage(itemValue)
-                    }>
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
-                </Picker>
+                {form ? (
+                    <Picker
+                        selectedValue={form.project}
+                        onValueChange={(itemValue) => handlePickerChange(itemValue)}
+                    >
+                        <Picker.Item label="Escolha um projeto" value="null" />
+
+                        {projectList.map((project, index) => (
+                            <Picker.Item key={index} label={project.projectName} value={project._id.$oid} />
+                        ))}
+                    </Picker>
+                ) : null}
             </View>
         </View>
     )

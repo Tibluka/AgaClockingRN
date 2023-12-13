@@ -10,21 +10,17 @@ export const styles = StyleSheet.create({
     header: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%'
+        justifyContent: 'space-around',
+        minWidth: '100%'
     },
     title: {
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     textBody: {
-        fontSize: 14
+        fontSize: 14,
     },
     form: {
-        width: 200
-    },
-    picker: {
-        color: 'green'
+        minWidth: '100%' // Aplica o estilo de largura de 100%
     }
 });
