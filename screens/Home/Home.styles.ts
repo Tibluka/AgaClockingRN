@@ -16,10 +16,6 @@ export const styles = StyleSheet.create({
         bottom: 70,
         right: 20
     },
-    menuSvgIcon: {
-        width: 55,
-        height: 55
-    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -41,8 +37,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 10,
         img: {
-            width: 20,
-            height: 20,
+            width: 24,
+            height: 24,
             marginRight: 16
         }
     },
@@ -56,14 +52,14 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 24,
         arrowRight: {
-            width: 20,
-            height: 20,
-            transform: 'rotate(180deg)',
+            width: 16,
+            height: 16,
+            transform: [{ rotate: '180deg' }],
             marginLeft: 48
         },
         arrowLeft: {
-            width: 20,
-            height: 20,
+            width: 16,
+            height: 16,
             marginRight: 48
         }
     }

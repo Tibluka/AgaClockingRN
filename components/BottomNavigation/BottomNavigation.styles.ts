@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        height: 60,
+        height: 50,
         backgroundColor: '#606585',
         position: 'absolute',
         bottom: 0,
@@ -21,8 +21,8 @@ export const styles = StyleSheet.create({
         backgroundColor: '#828ac2', // Cor de fundo quando a aba está ativa
         height: '100%'
     },
-    menuSvgIcon: {
-        width: 35,
-        height: 35
+    img: {
+        width: 24,
+        height: 24
     }
 });

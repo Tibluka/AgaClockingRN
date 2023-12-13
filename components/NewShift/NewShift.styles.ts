@@ -2,11 +2,15 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: '100%',
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     title: {
         fontSize: 16,
@@ -14,5 +18,11 @@ export const styles = StyleSheet.create({
     },
     textBody: {
         fontSize: 14
+    },
+    form: {
+        width: 200
+    },
+    picker: {
+        color: 'green'
     }
 });

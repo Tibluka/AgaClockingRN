@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização para português do Brasil
 import React, { useEffect, useState } from 'react';

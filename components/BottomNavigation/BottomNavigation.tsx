@@ -10,7 +10,7 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'home' && styles.activeTab]}
                 onPress={() => onSelectTab('home')}
             >
-                <Image
+                <Image style={styles.img}
                     source={require('../../assets/icon/graphics-icon.png')}
                 />
             </TouchableOpacity>
@@ -19,7 +19,7 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'add' && styles.activeTab]}
                 onPress={() => onSelectTab('add')}
             >
-                <Image
+                <Image style={styles.img}
                     source={require('../../assets/icon/home.png')}
                 />
             </TouchableOpacity>
@@ -28,7 +28,7 @@ const BottomNavigation = ({ activeTab, onSelectTab }) => {
                 style={[styles.tab, activeTab === 'monthly' && styles.activeTab]}
                 onPress={() => onSelectTab('monthly')}
             >
-                <Image
+                <Image style={styles.img}
                     source={require('../../assets/icon/calendar-icon.png')}
                 />
             </TouchableOpacity>
