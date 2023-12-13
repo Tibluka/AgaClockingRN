@@ -10,11 +10,13 @@ export const styles = StyleSheet.create({
     header: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%'
     },
     title: {
         fontSize: 16,
-        fontWeight: 'normal'
+        fontWeight: 'bold'
     },
     textBody: {
         fontSize: 14
