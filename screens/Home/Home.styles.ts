@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
     container: {
-        paddingTop: 50,
         flex: 1,
         width: '100%',
         backgroundColor: '#fff',
@@ -11,7 +10,6 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        marginBottom: 24
     },
     button: {
         position: 'absolute',
@@ -41,5 +39,22 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         flexDirection: 'row'
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 24,
+        arrowRight: {
+            width: 20,
+            height: 20,
+            transform: 'rotate(180deg)',
+            marginLeft: 48
+        },
+        arrowLeft: {
+            width: 20,
+            height: 20,
+            marginRight: 48
+        }
     }
 });

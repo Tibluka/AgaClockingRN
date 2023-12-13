@@ -25,8 +25,14 @@ const Home = () => {
         setModalVisible(false);
     };
 
-    function changeDate() {
-        setCurrentDate('2023-12-11');
+    function changeDate(type) {
+        let newDate = null;
+        if (type === 'previous') {
+            newDate = moment(currentDate).subtract(1, 'd');
+        } else if (type === 'next') {
+            newDate = moment(currentDate).add(1, 'd');
+        }
+        setCurrentDate(moment(newDate).format('YYYY-MM-DD'));
     }
 
     useEffect(() => {
@@ -41,7 +47,21 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{moment(currentDate).format('ddd DD/MM/YYYY')}</Text>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => { changeDate('previous') }}>
+                    <Image style={styles.header.arrowLeft}
+                        source={require('../../assets/icon/arrow-left.png')}
+                    />
+                </TouchableOpacity>
+
+                <Text style={styles.title}>{moment(currentDate).format('ddd DD/MM/YYYY')}</Text>
+
+                <TouchableOpacity onPress={() => { changeDate('next') }}>
+                    <Image style={styles.header.arrowRight}
+                        source={require('../../assets/icon/arrow-left.png')}
+                    />
+                </TouchableOpacity>
+            </View>
 
             {
                 (shifts && shifts.length > 0) ? shifts.map((shift, index) => (
