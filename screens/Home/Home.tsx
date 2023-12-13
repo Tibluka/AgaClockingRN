@@ -1,20 +1,19 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
+import 'moment/locale/pt-br'; // Importa a localização para português do Brasil
 import React, { useEffect, useState } from 'react';
-import { Modal, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
+import { shiftService } from '../../services/ShiftService';
 import { UserStore } from '../../zustand/User';
 import { styles } from './Home.styles';
-import 'moment/locale/pt-br'; // Importa a localização para português do Brasil
-
 
 const Home = () => {
     moment.locale('pt-br'); // Define a localização como português do Brasil
 
     const [modalVisible, setModalVisible] = useState(false);
     const [shifts, setShifts] = useState([]);
-    const currentDate = moment().format('YYYY-MM-DD');
 
+    const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
 
     const { user } = UserStore();
 
@@ -26,36 +25,19 @@ const Home = () => {
         setModalVisible(false);
     };
 
+    function changeDate() {
+        setCurrentDate('2023-12-11');
+    }
+
     useEffect(() => {
-        const fetchShifts = async () => {
-            try {
-                const token = await AsyncStorage.getItem('agc_token');
+        const listShifts = async () => {
+            const shifts = await shiftService.setShiftList(currentDate);
+            console.log(shifts);
 
-                const response = await fetch(
-                    `https://agaclocking.onrender.com/list-shifts?date=${moment(currentDate).format('YYYY-MM-DD')}&userId=${user.id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-
-                if (!response.ok) {
-                    throw new Error(`Erro na requisição: ${response.statusText}`);
-                }
-                const data = await response.json();
-
-                setShifts(data.shifts);
-            } catch (error) {
-                console.error('Erro ao buscar shifts:', error);
-            }
-        };
-
-        fetchShifts();
-        console.log(user);
-
-    }, [user]);
+            setShifts(shifts);
+        }
+        listShifts();
+    }, [currentDate]);
 
     return (
         <View style={styles.container}>

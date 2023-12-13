@@ -58,6 +58,7 @@ const Login = ({ setIsLoggedIn }) => {
                 const data = await response.json();
                 if (data.token) {
                     setUser(data.user);
+                    await AsyncStorage.setItem('agc_user', JSON.stringify(data.user));
                     setIsLoggedIn(true);
                     await AsyncStorage.setItem('agc_token', data.token);
                 } else {
