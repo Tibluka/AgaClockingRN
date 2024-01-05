@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Navigator from './components/Navigator/Navigator';
-import Login from './screens/Login/Login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import AppNavigator from './components/Navigator/Navigator';
 
 if (__DEV__) {
-  import("./ReactotronConfig").then(() => console.log("Reactotron Configured")).catch((e) => console.log('AQUI ERRO',e));
+  import("./ReactotronConfig").then(() => console.log("Reactotron Configured")).catch((e) => console.log('AQUI ERRO', e));
 }
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const getUser = async () => {
+      const user = await AsyncStorage.getItem('agc_user');
+      if (user) {
+        setUser(user);
+      }
+    }
+    getUser()
 
-  /*  useEffect(() => {
-     const getUser = async () => {
-       const user = await AsyncStorage.getItem('agc_user');
-       if (user) {
-         setIsLoggedIn(true);
-         UserStore().setUser(JSON.parse(user));
-       }
-     }
-     getUser()
- 
-   }, [])
-  */
+  }, [])
+
   return (
-    <View style={styles.container}>
-      {isLoggedIn ? (<Navigator />) : (<Login setIsLoggedIn={setIsLoggedIn} />)}
-    </View>
+    <NavigationContainer>
+      {/* Passe o estado de login para o AppNavigator */}
+      <AppNavigator setIsLoggedIn={setIsLoggedIn} user={user} />
+      {/* Aqui você pode adicionar outros componentes, como o botão de alternar login */}
+    </NavigationContainer>
+
   );
 };
 

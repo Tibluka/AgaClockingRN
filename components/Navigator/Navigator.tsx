@@ -5,35 +5,51 @@ import Home from '../../screens/Home/Home';
 import Calendar from '../../screens/Calendar/Calendar';
 import { styles } from './Navigator.styles';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from '../../screens/Login/Login';
 
-// import { Container } from './styles';
+// StackNavigator para a área não logada
+const NonLoggedInStack = createNativeStackNavigator();
 
-const Navigator = () => {
-    const [activeTab, setActiveTab] = useState('home');
+function NonLoggedInNavigator({ setIsLoggedIn }) {
+    return (
+        <NonLoggedInStack.Navigator>
+            <NonLoggedInStack.Screen
+                name="LOGIN"
+                options={{ headerShown: false }}>
+                {(props) => <Login {...props} setIsLoggedIn={setIsLoggedIn} />}
+            </NonLoggedInStack.Screen>
 
-    const handleTabSelect = (tab) => {
-        setActiveTab(tab);
-        // Aqui você pode adicionar lógica para mudar o conteúdo da tela com base na aba selecionada
-    };
-    // Renderizar o componente com base na activeTab
-    const renderScreen = () => {
-        switch (activeTab) {
-            case 'home':
-                return <Charts />;
-            case 'add':
-                return <Home />;
-            case 'monthly':
-                return <Calendar />;
-            default:
-                return null; // Ou renderizar algo padrão caso a activeTab seja desconhecida
-        }
-    };
-
-    return <View style={styles.container}>
-        {renderScreen()}
-
-        <BottomNavigation activeTab={activeTab} onSelectTab={handleTabSelect} />
-    </View>;
+        </NonLoggedInStack.Navigator >
+    );
 }
 
-export default Navigator;
+// StackNavigator para a área logada
+const LoggedInStack = createNativeStackNavigator();
+
+function LoggedInNavigator({ user }) {
+    return (
+        <LoggedInStack.Navigator>
+            <LoggedInStack.Screen name="HOME" options={{ headerShown: false }} component={Home} />
+            <LoggedInStack.Screen name="CHARTS" options={{ headerShown: false }} component={Charts} />
+            <LoggedInStack.Screen name="CALENDAR" options={{ headerShown: false }} component={Calendar} />
+
+        </LoggedInStack.Navigator>
+    );
+}
+
+// Componente principal que decide qual Navigator usar com base no estado de login
+function AppNavigator({ setIsLoggedIn, user }) {
+    return (
+        user ?
+            (<>
+                <LoggedInNavigator user={user} />
+                <BottomNavigation />
+            </>) :
+            (
+                <NonLoggedInNavigator setIsLoggedIn={setIsLoggedIn} />
+            )
+    );
+}
+
+export default AppNavigator;
