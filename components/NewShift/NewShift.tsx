@@ -1,24 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { projectService } from '../../services/ProjectService';
-import { UserStore } from '../../zustand/User';
 import { styles } from './NewShift.styles';
 
-/* 
 
-{
-"startShift":"2023-12-13T16:00:22",
-"activity":"desenvolvimento ",
-"project":"Agacode",
-"endShift":"",
-"finished":false,
-"userId":"636e43b1ed95fc80872a7b3a"
-}
-*/
 
 class Form {
     startShift: Date = null;
@@ -26,6 +14,7 @@ class Form {
     project: string = "";
     finished: boolean = false;
     userId: string = "";
+    activity: string = "";
 
     constructor(userId: string) {
         this.userId = userId;
@@ -34,30 +23,84 @@ class Form {
 
 // import { Container } from './styles';
 
-const NewShift = () => {
+const NewShift = ({ setModalVisible }: any) => {
     const currentDate = moment().format('DD/MM/YYYY');
     const [projectList, setProjectList] = useState([]);
-    const [form, setForm] = useState(null);
 
-    const handlePickerChange = (value) => {
-        console.log(value);
+    const [startShiftHour] = useState(null);
+    const [startShiftMinute] = useState(null);
+    const [endShiftHour] = useState(null);
+    const [endShiftMinute] = useState(null);
 
-        setForm((prevForm) => ({ ...prevForm, project: value }));
-        console.log(form);
+    const [userId, setUserId] = useState("");
+    const [project, setProject] = useState("");
+    const [activity, setActivity] = useState("");
 
+    const [startShift, setStartShift] = useState("");
+    const [endShift, setEndShift] = useState("");
+
+    const [hourList, setHourList] = useState([]);
+    const [minuteList, setMinuteList] = useState([]);
+
+    const handlePickerChange = (value, key) => {
+
+        if (key === 'startShiftHour') {
+
+        }
+        if (key === 'startShiftMinute') {
+
+        }
+        if (key === 'endShiftHour') {
+
+        }
+        if (key === 'endShiftMinute') {
+
+        }
     };
+
+    function addShift(){
+        
+    }
+
+    function closeModal() {
+        setModalVisible(false)
+    }
 
     useEffect(() => {
         const setNewForm = async () => {
             const user = await JSON.parse(await AsyncStorage.getItem('agc_user'));
-            setForm(new Form(user.id));
+            setUserId(user.id);
         }
         const listProjects = async () => {
             const projects = await projectService.setProjectList();
             setProjectList(projects);
         }
+
+        const listHours = async () => {
+            let hours = [];
+            for (let index = 0; index <= 23; index++) {
+                hours.push(
+                    { description: `${index < 10 ? `0${index}` : index}`, value: index }
+                )
+            }
+            setHourList(hours);
+        }
+
+        const listMinutes = async () => {
+            let minutes = [];
+            for (let index = 0; index <= 59; index++) {
+                minutes.push(
+                    { description: `${index < 10 ? `0${index}` : index}`, value: index }
+                )
+            }
+            setMinuteList(minutes);
+        }
+
+        listHours();
+        listMinutes();
         listProjects();
         setNewForm();
+
     }, [])
 
     return (
@@ -68,19 +111,89 @@ const NewShift = () => {
             </View>
 
             <View style={styles.form}>
-                {form ? (
-                    <Picker
-                        selectedValue={form.project}
-                        onValueChange={(itemValue) => handlePickerChange(itemValue)}
+                <View style={styles.formItem}>
+                    <Text style={styles.label}>Horario inicial</Text>
+                    <Picker style={{ width: 300 }}
+                        selectedValue={project}
+                        onValueChange={(itemValue) => setProject(itemValue)}
                     >
                         <Picker.Item label="Escolha um projeto" value="null" />
 
                         {projectList.map((project, index) => (
-                            <Picker.Item key={index} label={project.projectName} value={project._id.$oid} />
+                            <Picker.Item key={index} label={project.projectName} value={project.projectName} />
                         ))}
                     </Picker>
-                ) : null}
+                </View>
+
+                <View style={styles.formItem}>
+                    <Text style={styles.label}>Horario inicial</Text>
+                    <View style={{ display: 'flex', flexDirection: 'row', width: 100 }}>
+                        <Picker style={{ width: 150 }}
+                            selectedValue={startShiftHour}
+                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'startShiftHour')}
+                        >
+                            <Picker.Item label="Hora" value="null" />
+                            {hourList.map((hour, index) => (
+                                <Picker.Item key={index} label={hour.description} value={hour.value} />
+                            ))}
+
+                        </Picker>
+                        <Picker style={{ width: 150 }}
+                            selectedValue={startShiftMinute}
+                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'startShiftMinute')}
+                        >
+                            <Picker.Item label="Minuto" value="null" />
+
+                            {minuteList.map((minute, index) => (
+                                <Picker.Item key={index} label={minute.description} value={minute.value} />
+                            ))}
+                        </Picker>
+                    </View>
+                </View>
+
+                <View style={styles.formItem}>
+                    <Text style={styles.label}>Horario final</Text>
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                        <Picker style={{ width: 150 }}
+                            selectedValue={endShiftHour}
+                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftHour')}
+                        >
+                            <Picker.Item label="Hora" value="null" />
+                            {hourList.map((hour, index) => (
+                                <Picker.Item key={index} label={hour.description} value={hour.value} />
+                            ))}
+
+                        </Picker>
+                        <Picker style={{ width: 150 }}
+                            selectedValue={endShiftMinute}
+                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftMinute')}
+                        >
+                            <Picker.Item label="Minuto" value="null" />
+
+                            {minuteList.map((minute, index) => (
+                                <Picker.Item key={index} label={minute.description} value={minute.value} />
+                            ))}
+                        </Picker>
+                    </View>
+                </View>
+
+                <View style={[styles.formItem, styles.textarea]}>
+                    <TextInput
+                        multiline={true}
+                        numberOfLines={4}
+                        onChangeText={(text) => setActivity('activity')}
+                        value={activity} />
+                </View>
+
+                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={closeModal}>
+                    <Text style={{ color: '#fff' }}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => addShift}>
+                    <Text>Adicionar</Text>
+                </TouchableOpacity>
+
             </View>
+
         </View>
     )
 }

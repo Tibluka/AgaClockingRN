@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
 import { shiftService } from '../../services/ShiftService';
-import { UserStore } from '../../zustand/User';
 import { styles } from './Home.styles';
 
 const Home = () => {
@@ -15,8 +14,6 @@ const Home = () => {
     const [shifts, setShifts] = useState([]);
 
     const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
-
-    const { user } = UserStore();
 
     const openModal = () => {
         setModalVisible(true);
@@ -53,7 +50,7 @@ const Home = () => {
             setShifts(shifts);
         }
         listShifts();
-    }, [currentDate]);
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -126,7 +123,7 @@ const Home = () => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <NewShift />
+                        <NewShift setModalVisible={setModalVisible} />
                     </View>
                 </View>
             </Modal>

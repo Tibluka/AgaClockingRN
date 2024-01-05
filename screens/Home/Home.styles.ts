@@ -27,6 +27,7 @@ export const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
+        width: '100%'
     },
     shift: {
         height: 60,
