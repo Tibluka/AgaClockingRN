@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { UserStore } from '../../zustand/User';
 import { styles } from './Login.styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { Container } from './styles';
 
@@ -43,7 +43,6 @@ const Login = ({ setIsLoggedIn }) => {
 
         if ((emailError !== null || passwordError !== null)) {
             // Lógica de envio do formulário
-
             return;
         } else {
             try {

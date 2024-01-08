@@ -1,24 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ShiftStore } from '../zustand/Shift';
-import api from './RequestsService';
+import api from '../services/RequestsService';
+import { UserStore } from '../zustand/User';
 
-const setShiftList = () => {
-    const { shifts, setShift } = ShiftStore();
+const useUser = () => {
+    const { setUser } = UserStore();
 
-    const funnn = async (date: string) => {
+    const setLoggedUser = async () => {
         try {
             const user = JSON.parse(await AsyncStorage.getItem('agc_user'));
 
-
-            api.get(`list-shifts?date=${date}&userId=${user.id}`)
+            api.get(`get-user-by-id?userId=${user.id}`)
                 .then(async (response: any) => {
                     console.log(response);
-                    setShift(response.shifts);
-                    const data = await response.json();
+                    setUser(response);
                 })
                 .catch((error) => {
-                    console.log('error', error);
-
+                    AsyncStorage.clear();
                 })
 
         } catch (error) {
@@ -26,10 +23,10 @@ const setShiftList = () => {
         }
     }
 
-    return funnn;
+    return { setLoggedUser };
 }
 
-export default setShiftList;
+export { useUser };
 
 
 

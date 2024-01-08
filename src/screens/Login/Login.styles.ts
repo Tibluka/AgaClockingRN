@@ -7,7 +7,8 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: '#f1f7fe',
         width: '100%',
-        paddingBottom: 100
+        paddingBottom: 100,
+        paddingTop: 60
     },
     form: {
         width: '100%',

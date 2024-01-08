@@ -52,17 +52,17 @@ export const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 24,
-        arrowRight: {
-            width: 16,
-            height: 16,
-            transform: [{ rotate: '180deg' }],
-            marginLeft: 48
-        },
-        arrowLeft: {
-            width: 16,
-            height: 16,
-            marginRight: 48
-        }
+        marginBottom: 24
+    },
+    arrowRight: {
+        width: 16,
+        height: 16,
+        transform: [{ rotate: '180deg' }],
+        marginLeft: 48
+    },
+    arrowLeft: {
+        width: 16,
+        height: 16,
+        marginRight: 48
     }
 });

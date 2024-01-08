@@ -1,10 +1,12 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
-import Calendar from '../../screens/Calendar/Calendar';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
 import Charts from '../../screens/Charts/Charts';
 import Home from '../../screens/Home/Home';
-import Login from '../../screens/Login/Login';
+import Calendar from '../../screens/Calendar/Calendar';
+import { styles } from './Navigator.styles';
 import BottomNavigation from '../BottomNavigation/BottomNavigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from '../../screens/Login/Login';
 
 // StackNavigator para a área não logada
 const NonLoggedInStack = createNativeStackNavigator();
@@ -28,10 +30,9 @@ const LoggedInStack = createNativeStackNavigator();
 function LoggedInNavigator({ user }) {
     return (
         <LoggedInStack.Navigator>
-            <LoggedInStack.Screen name="HOME" options={{ headerShown: true }} component={Home} />
-            <LoggedInStack.Screen name="CHARTS" options={{ headerShown: true }} component={Charts} />
-            <LoggedInStack.Screen name="CALENDAR" options={{ headerShown: true }} component={Calendar} />
-
+            <LoggedInStack.Screen name="HOME" component={Home} />
+            <LoggedInStack.Screen name="CHARTS" component={Charts} />
+            <LoggedInStack.Screen name="CALENDAR" component={Calendar} />
         </LoggedInStack.Navigator>
     );
 }

@@ -1,13 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainerRefContext, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import 'moment/locale/pt-br'; // Importa a localização para português do Brasil
 import React, { useEffect, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
-import shiftService from '../../services/ShiftService';
-
+import { useShift } from '../../hooks/Shift.hook';
 import { ShiftStore } from '../../zustand/Shift';
 import { styles } from './Home.styles';
+
 
 const Home = () => {
     moment.locale('pt-br'); // Define a localização como português do Brasil
@@ -16,7 +16,7 @@ const Home = () => {
 
     const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
 
-    const setShiftList = shiftService();
+    const { setShiftList } = useShift();
 
     const openModal = () => {
         setModalVisible(true);
@@ -52,28 +52,28 @@ const Home = () => {
             await setShiftList(currentDate);
         }
         listShifts();
-    }, []);
+    }, [currentDate]);
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => { changeDate('previous') }}>
-                    <Image style={styles.header.arrowLeft}
+                <TouchableOpacity style={{ width: 70, height: 50 }} onPress={() => { changeDate('previous') }}>
+                    <Image style={styles.arrowLeft}
                         source={require('../../assets/icon/arrow-left.png')}
                     />
                 </TouchableOpacity>
 
                 <Text style={styles.title}>{moment(currentDate).format('ddd DD/MM/YYYY')}</Text>
 
-                <TouchableOpacity onPress={() => { changeDate('next') }}>
-                    <Image style={styles.header.arrowRight}
+                <TouchableOpacity style={{ width: 70, height: 50 }} onPress={() => { changeDate('next') }}>
+                    <Image style={styles.arrowRight}
                         source={require('../../assets/icon/arrow-left.png')}
                     />
                 </TouchableOpacity>
             </View>
 
             {
-                (shifts && shifts.length > 0) ? shifts.map((shift, index) => (
+                (shifts && shifts.length > 0) ? shifts.map((shift) => (
                     <View style={styles.shift} key={shift._id.$oid}>
                         <View style={styles.projectName}>
                             {
