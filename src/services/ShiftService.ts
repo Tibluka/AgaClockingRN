@@ -1,29 +1,35 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ShiftStore } from '../zustand/Shift';
+import api from './RequestsService';
 
-const setShiftList = async (date: string) => {
-    try {
-        const agc_token = await AsyncStorage.getItem('agc_token');
-        const user = JSON.parse(await AsyncStorage.getItem('agc_user'));
-        const response = await fetch(`https://agaclocking.onrender.com/list-shifts?date=${date}&userId=${user.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${agc_token}`
-            }
-        });
+const setShiftList = () => {
+    const { shifts, setShift } = ShiftStore();
 
-        const data = await response.json();
+    const funnn = async (date: string) => {
+        try {
+            const user = JSON.parse(await AsyncStorage.getItem('agc_user'));
 
-        return data.shifts;
 
-    } catch (error) {
-        throw error; // Você pode escolher lidar com o erro aqui ou deixar que quem chama lide com isso.
+            api.get(`list-shifts?date=${date}&userId=${user.id}`)
+                .then(async (response: any) => {
+                    console.log(response);
+                    setShift(response.shifts);
+                    const data = await response.json();
+                })
+                .catch((error) => {
+                    console.log('error', error);
+
+                })
+
+        } catch (error) {
+            throw error; // Você pode escolher lidar com o erro aqui ou deixar que quem chama lide com isso.
+        }
     }
+
+    return funnn;
 }
 
-export const shiftService = {
-    setShiftList
-};
+export default setShiftList;
 
 
 

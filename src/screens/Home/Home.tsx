@@ -4,16 +4,19 @@ import 'moment/locale/pt-br'; // Importa a localização para português do Bras
 import React, { useEffect, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
-import { shiftService } from '../../services/ShiftService';
+import shiftService from '../../services/ShiftService';
+
+import { ShiftStore } from '../../zustand/Shift';
 import { styles } from './Home.styles';
 
 const Home = () => {
     moment.locale('pt-br'); // Define a localização como português do Brasil
-
     const [modalVisible, setModalVisible] = useState(false);
-    const [shifts, setShifts] = useState([]);
+    const { shifts } = ShiftStore();
 
     const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
+
+    const setShiftList = shiftService();
 
     const openModal = () => {
         setModalVisible(true);
@@ -46,8 +49,7 @@ const Home = () => {
 
     useEffect(() => {
         const listShifts = async () => {
-            const shifts = await shiftService.setShiftList(currentDate);
-            setShifts(shifts);
+            await setShiftList(currentDate);
         }
         listShifts();
     }, []);
