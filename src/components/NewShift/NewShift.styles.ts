@@ -10,8 +10,7 @@ export const styles = StyleSheet.create({
     header: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        minWidth: '100%'
+        justifyContent: 'space-around'
     },
     title: {
         fontSize: 16,

@@ -27,39 +27,48 @@ const NewShift = ({ setModalVisible }: any) => {
     const currentDate = moment().format('DD/MM/YYYY');
     const [projectList, setProjectList] = useState([]);
 
-    const [startShiftHour] = useState(null);
-    const [startShiftMinute] = useState(null);
-    const [endShiftHour] = useState(null);
-    const [endShiftMinute] = useState(null);
+    const [startShiftHour, setStartShiftHour] = useState(null);
+    const [startShiftMinute, setStartShiftMinute] = useState(null);
+    const [endShiftHour, setEndShiftHour] = useState(null);
+    const [endShiftMinute, setEndShiftMinute] = useState(null);
 
     const [userId, setUserId] = useState("");
     const [project, setProject] = useState("");
     const [activity, setActivity] = useState("");
 
-    const [startShift, setStartShift] = useState("");
+    const [startShift, setStartShift] = useState(moment(new Date()).format('YYYY-MM-DD HH:mm:00'));
     const [endShift, setEndShift] = useState("");
 
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
 
-    const handlePickerChange = (value, key) => {
+    const handlePickerChange = (value: number, key: string) => {
 
         if (key === 'startShiftHour') {
-
+            const newTime = moment(startShift).hours(value).format('YYYY-MM-DD HH:mm:00');
+            setStartShift(newTime);
+            setStartShiftHour(value);
         }
         if (key === 'startShiftMinute') {
-
+            const newTime = moment(startShift).minutes(value).format('YYYY-MM-DD HH:mm:00');
+            setStartShift(newTime);
+            setStartShiftMinute(value);
         }
         if (key === 'endShiftHour') {
-
+            const newTime = moment(endShift).hours(value).format('YYYY-MM-DD HH:mm:00');
+            setEndShift(newTime);
+            setEndShiftHour(value);
         }
         if (key === 'endShiftMinute') {
-
+            const newTime = moment(endShift).minutes(value).format('YYYY-MM-DD HH:mm:00');
+            setEndShift(newTime);
+            setEndShiftMinute(value);
         }
+
     };
 
-    function addShift(){
-        
+    function addShift() {
+
     }
 
     function closeModal() {
@@ -113,7 +122,7 @@ const NewShift = ({ setModalVisible }: any) => {
             <View style={styles.form}>
                 <View style={styles.formItem}>
                     <Text style={styles.label}>Horario inicial</Text>
-                    <Picker style={{ width: 300 }}
+                    <Picker style={{ width: '100%' }}
                         selectedValue={project}
                         onValueChange={(itemValue) => setProject(itemValue)}
                     >
@@ -132,7 +141,7 @@ const NewShift = ({ setModalVisible }: any) => {
                             selectedValue={startShiftHour}
                             onValueChange={(itemValue) => handlePickerChange(itemValue, 'startShiftHour')}
                         >
-                            <Picker.Item label="Hora" value="null" />
+                            <Picker.Item label="Hora inicial" value="null" />
                             {hourList.map((hour, index) => (
                                 <Picker.Item key={index} label={hour.description} value={hour.value} />
                             ))}
@@ -142,8 +151,7 @@ const NewShift = ({ setModalVisible }: any) => {
                             selectedValue={startShiftMinute}
                             onValueChange={(itemValue) => handlePickerChange(itemValue, 'startShiftMinute')}
                         >
-                            <Picker.Item label="Minuto" value="null" />
-
+                            <Picker.Item label="Minuto inicial" value="null" />
                             {minuteList.map((minute, index) => (
                                 <Picker.Item key={index} label={minute.description} value={minute.value} />
                             ))}
@@ -158,7 +166,7 @@ const NewShift = ({ setModalVisible }: any) => {
                             selectedValue={endShiftHour}
                             onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftHour')}
                         >
-                            <Picker.Item label="Hora" value="null" />
+                            <Picker.Item label="Hora final" value="null" />
                             {hourList.map((hour, index) => (
                                 <Picker.Item key={index} label={hour.description} value={hour.value} />
                             ))}
@@ -168,8 +176,7 @@ const NewShift = ({ setModalVisible }: any) => {
                             selectedValue={endShiftMinute}
                             onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftMinute')}
                         >
-                            <Picker.Item label="Minuto" value="null" />
-
+                            <Picker.Item label="Minuto final" value="null" />
                             {minuteList.map((minute, index) => (
                                 <Picker.Item key={index} label={minute.description} value={minute.value} />
                             ))}
@@ -181,15 +188,15 @@ const NewShift = ({ setModalVisible }: any) => {
                     <TextInput
                         multiline={true}
                         numberOfLines={4}
-                        onChangeText={(text) => setActivity('activity')}
+                        onChangeText={(text) => setActivity(text)}
                         value={activity} />
                 </View>
 
-                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={closeModal}>
-                    <Text style={{ color: '#fff' }}>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => addShift}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={() => addShift}>
                     <Text>Adicionar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={closeModal}>
+                    <Text style={{ color: '#fff' }}>Cancelar</Text>
                 </TouchableOpacity>
 
             </View>

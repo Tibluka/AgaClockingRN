@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
+        height: 70
     },
     button: {
         position: 'absolute',
@@ -28,7 +29,7 @@ export const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
-        width: '100%'
+        width: '90%'
     },
     shift: {
         height: 60,

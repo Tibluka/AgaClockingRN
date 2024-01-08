@@ -74,7 +74,8 @@ const Home = () => {
 
             {
                 (shifts && shifts.length > 0) ? shifts.map((shift) => (
-                    <View style={styles.shift} key={shift._id.$oid}>
+                    <TouchableOpacity style={styles.shift} key={shift._id.$oid} onPress={openModal}>
+
                         <View style={styles.projectName}>
                             {
                                 !shift.finished ?
@@ -104,7 +105,8 @@ const Home = () => {
                                     (<Text>Em aberto</Text>)
                             }
                         </View>
-                    </View>
+
+                    </TouchableOpacity>
                 )) :
                     <View>
                         <Text>Nenhum turno registrado</Text>
