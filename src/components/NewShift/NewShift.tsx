@@ -3,21 +3,29 @@ import { Picker } from '@react-native-picker/picker';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useShift } from '../../hooks/Shift.hook';
 import { projectService } from '../../services/ProjectService';
+import api from '../../services/RequestsService';
+import { ShiftStore } from '../../zustand/Shift';
 import { styles } from './NewShift.styles';
 
 
 
 class Form {
-    startShift: Date = null;
-    endShift: Date = null;
+    startShift: string = null;
+    endShift: string = null;
     project: string = "";
     finished: boolean = false;
     userId: string = "";
     activity: string = "";
 
-    constructor(userId: string) {
+    constructor(userId: string, startShift: string, endShift: string, project: string, activity: string) {
         this.userId = userId;
+        this.startShift = startShift;
+        this.endShift = endShift;
+        this.project = project;
+        this.activity = activity;
+        if (this.endShift) this.finished = true;
     }
 }
 
@@ -36,43 +44,51 @@ const NewShift = ({ setModalVisible }: any) => {
     const [project, setProject] = useState("");
     const [activity, setActivity] = useState("");
 
-    const [startShift, setStartShift] = useState(moment(new Date()).format('YYYY-MM-DD HH:mm:00'));
-    const [endShift, setEndShift] = useState("");
+    const [startShift, setStartShift] = useState(moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
+    const [endShift, setEndShift] = useState(moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
 
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
 
+    const { updateShift } = useShift();
+
     const handlePickerChange = (value: number, key: string) => {
 
         if (key === 'startShiftHour') {
-            const newTime = moment(startShift).hours(value).format('YYYY-MM-DD HH:mm:00');
+            const newTime = moment(startShift).hours(value).format('YYYY-MM-DDTHH:mm:00');
             setStartShift(newTime);
             setStartShiftHour(value);
         }
         if (key === 'startShiftMinute') {
-            const newTime = moment(startShift).minutes(value).format('YYYY-MM-DD HH:mm:00');
+            const newTime = moment(startShift).minutes(value).format('YYYY-MM-DDTHH:mm:00');
             setStartShift(newTime);
             setStartShiftMinute(value);
         }
         if (key === 'endShiftHour') {
-            const newTime = moment(endShift).hours(value).format('YYYY-MM-DD HH:mm:00');
+            const newTime = moment(endShift).hours(value).format('YYYY-MM-DDTHH:mm:00');
             setEndShift(newTime);
             setEndShiftHour(value);
         }
         if (key === 'endShiftMinute') {
-            const newTime = moment(endShift).minutes(value).format('YYYY-MM-DD HH:mm:00');
+            const newTime = moment(endShift).minutes(value).format('YYYY-MM-DDTHH:mm:00');
             setEndShift(newTime);
             setEndShiftMinute(value);
         }
 
+
+
     };
 
-    function addShift() {
+    async function addShift() {
+        const payload = new Form(userId, startShift, endShift, project, activity);
 
+        await updateShift(payload);
+
+        setModalVisible(false);
     }
 
     function closeModal() {
-        setModalVisible(false)
+        setModalVisible(false);
     }
 
     useEffect(() => {
@@ -161,7 +177,7 @@ const NewShift = ({ setModalVisible }: any) => {
 
                 <View style={styles.formItem}>
                     <Text style={styles.label}>Horario final</Text>
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', width: 100 }}>
                         <Picker style={{ width: 150 }}
                             selectedValue={endShiftHour}
                             onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftHour')}
@@ -192,7 +208,7 @@ const NewShift = ({ setModalVisible }: any) => {
                         value={activity} />
                 </View>
 
-                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={() => addShift}>
+                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={addShift}>
                     <Text>Adicionar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={closeModal}>

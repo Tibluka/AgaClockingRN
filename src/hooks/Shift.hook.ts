@@ -22,6 +22,7 @@ const useShift = () => {
                     if (error.toJSON()['status'] === 401) {
                         Alert.alert('Token inválido', 'Token expirado. Faça o login novamente.')
                         setUser(null);
+                        AsyncStorage.clear();
                     }
                 })
 
@@ -30,7 +31,31 @@ const useShift = () => {
         }
     }
 
-    return { setShiftList };
+    const updateShift = async (payload) => {
+        try {
+            api.post(`initiate-shift`, payload)
+                .then(async (response: any) => {
+                    console.log('caiu sucesso');
+                    
+                    const shifts = await response.data.shifts;
+                    setShift(shifts);
+                })
+                .catch((error: AxiosError) => {
+                    console.log('caiu erro');
+                    
+                    if (error.toJSON()['status'] === 401) {
+                        Alert.alert('Token inválido', 'Token expirado. Faça o login novamente.')
+                        setUser(null);
+                        AsyncStorage.clear();
+                    }
+                })
+
+        } catch (error) {
+
+        }
+    }
+
+    return { setShiftList, updateShift };
 }
 
 export { useShift };
