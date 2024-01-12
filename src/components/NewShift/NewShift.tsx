@@ -12,45 +12,53 @@ import { styles } from './NewShift.styles';
 
 
 class Form {
+    shiftId: string;
     startShift: string = null;
     endShift: string = null;
-    project: string = "";
-    finished: boolean = false;
+    project: string;
     userId: string = "";
     activity: string = "";
+    totalTimeInMinutes: number;
+    overnight: boolean = false;
+    total: string;
 
-    constructor(userId: string, startShift: string, endShift: string, project: string, activity: string) {
+    constructor(userId: string, startShift: string, endShift: string, project: string, activity: string, shiftId?: string) {
         this.userId = userId;
         this.startShift = startShift;
-        this.endShift = endShift;
-        this.project = project;
+        if (!shiftId) {
+            this.project = project;
+        }
         this.activity = activity;
-        if (this.endShift) this.finished = true;
+        if (endShift) this.endShift = endShift;
+        if (shiftId) {
+            this.shiftId = shiftId;
+        }
+
     }
 }
 
 // import { Container } from './styles';
 
-const NewShift = ({ setModalVisible }: any) => {
+const NewShift = ({ shift, setModalVisible }: any) => {
     const currentDate = moment().format('DD/MM/YYYY');
     const [projectList, setProjectList] = useState([]);
 
-    const [startShiftHour, setStartShiftHour] = useState(null);
-    const [startShiftMinute, setStartShiftMinute] = useState(null);
-    const [endShiftHour, setEndShiftHour] = useState(null);
-    const [endShiftMinute, setEndShiftMinute] = useState(null);
+    const [startShiftHour, setStartShiftHour] = useState(shift ? moment(shift.startShift).hours() : null);
+    const [startShiftMinute, setStartShiftMinute] = useState(shift ? moment(shift.startShift).minutes() : null);
+    const [endShiftHour, setEndShiftHour] = useState(shift ? moment(shift.endShift).hours() : null);
+    const [endShiftMinute, setEndShiftMinute] = useState(shift ? moment(shift.endShift).minutes() : null);
 
-    const [userId, setUserId] = useState("");
-    const [project, setProject] = useState("");
-    const [activity, setActivity] = useState("");
+    const [userId, setUserId] = useState(shift.userId);
+    const [project, setProject] = useState(shift.project);
+    const [activity, setActivity] = useState(shift.activity);
 
-    const [startShift, setStartShift] = useState(moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
-    const [endShift, setEndShift] = useState(moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
+    const [startShift, setStartShift] = useState(shift.startShift || moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
+    const [endShift, setEndShift] = useState(shift.endShift || moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
 
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
 
-    const { updateShift } = useShift();
+    const { initiateShift, updateShift } = useShift();
 
     const handlePickerChange = (value: number, key: string) => {
 
@@ -68,23 +76,34 @@ const NewShift = ({ setModalVisible }: any) => {
             const newTime = moment(endShift).hours(value).format('YYYY-MM-DDTHH:mm:00');
             setEndShift(newTime);
             setEndShiftHour(value);
+            console.log(endShift);
         }
         if (key === 'endShiftMinute') {
             const newTime = moment(endShift).minutes(value).format('YYYY-MM-DDTHH:mm:00');
             setEndShift(newTime);
             setEndShiftMinute(value);
+            console.log(endShift);
         }
 
 
 
     };
 
-    async function addShift() {
-        const payload = new Form(userId, startShift, endShift, project, activity);
+    function addShift() {
+        const payload = new Form(
+            userId,
+            startShift,
+            endShift || shift.endShift,
+            project,
+            activity,
+            shift._id?.$oid
+        );
 
-        await updateShift(payload);
-
-        setModalVisible(false);
+         if (shift && shift._id?.$oid) {
+             updateShift(payload);
+         } else initiateShift(payload);
+ 
+         closeModal();
     }
 
     function closeModal() {
@@ -175,30 +194,34 @@ const NewShift = ({ setModalVisible }: any) => {
                     </View>
                 </View>
 
-                <View style={styles.formItem}>
-                    <Text style={styles.label}>Horario final</Text>
-                    <View style={{ display: 'flex', flexDirection: 'row', width: 100 }}>
-                        <Picker style={{ width: 150 }}
-                            selectedValue={endShiftHour}
-                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftHour')}
-                        >
-                            <Picker.Item label="Hora final" value="null" />
-                            {hourList.map((hour, index) => (
-                                <Picker.Item key={index} label={hour.description} value={hour.value} />
-                            ))}
+                {
+                    shift && shift._id?.$oid ?
+                        <View style={styles.formItem}>
+                            <Text style={styles.label}>Horario final</Text>
+                            <View style={{ display: 'flex', flexDirection: 'row', width: 100 }}>
+                                <Picker style={{ width: 150 }}
+                                    selectedValue={endShiftHour}
+                                    onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftHour')}
+                                >
+                                    <Picker.Item label="Hora final" value="null" />
+                                    {hourList.map((hour, index) => (
+                                        <Picker.Item key={index} label={hour.description} value={hour.value} />
+                                    ))}
 
-                        </Picker>
-                        <Picker style={{ width: 150 }}
-                            selectedValue={endShiftMinute}
-                            onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftMinute')}
-                        >
-                            <Picker.Item label="Minuto final" value="null" />
-                            {minuteList.map((minute, index) => (
-                                <Picker.Item key={index} label={minute.description} value={minute.value} />
-                            ))}
-                        </Picker>
-                    </View>
-                </View>
+                                </Picker>
+                                <Picker style={{ width: 150 }}
+                                    selectedValue={endShiftMinute}
+                                    onValueChange={(itemValue) => handlePickerChange(itemValue, 'endShiftMinute')}
+                                >
+                                    <Picker.Item label="Minuto final" value="null" />
+                                    {minuteList.map((minute, index) => (
+                                        <Picker.Item key={index} label={minute.description} value={minute.value} />
+                                    ))}
+                                </Picker>
+                            </View>
+                        </View>
+                        : null
+                }
 
                 <View style={[styles.formItem, styles.textarea]}>
                     <TextInput
@@ -209,7 +232,7 @@ const NewShift = ({ setModalVisible }: any) => {
                 </View>
 
                 <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={addShift}>
-                    <Text>Adicionar</Text>
+                    <Text>{shift && shift._id?.$oid ? 'Finalizar' : 'Iniciar'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={closeModal}>
                     <Text style={{ color: '#fff' }}>Cancelar</Text>

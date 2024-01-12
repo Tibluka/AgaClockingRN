@@ -1,9 +1,10 @@
 // requestService.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { HML } from '../../config';
 
 const api = axios.create({
-    baseURL: 'https://agaclocking.onrender.com', // substitua pela sua URL de API
+    baseURL: HML.API_URL, // substitua pela sua URL de API
 });
 
 // Interceptor para adicionar token a todas as requisições

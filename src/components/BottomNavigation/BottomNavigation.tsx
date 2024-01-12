@@ -6,7 +6,7 @@ import { styles } from './BottomNavigation.styles';
 
 const BottomNavigation = () => {
     const navigation = useNavigation<any>();
-    const [activeTab, setActiveTab] = useState(navigation.getCurrentRoute().name);
+    const [activeTab, setActiveTab] = useState(navigation.getCurrentRoute()?.name);
 
     function onSelectTab(menuOption: string) {
         navigation.navigate(menuOption);

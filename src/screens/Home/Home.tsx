@@ -15,10 +15,12 @@ const Home = () => {
     const { shifts } = ShiftStore();
 
     const [currentDate, setCurrentDate] = useState(moment().format('YYYY-MM-DD'));
+    const [selectedShift, setSelectedShift] = useState(null);
 
     const { setShiftList } = useShift();
 
-    const openModal = () => {
+    const openModal = (shift) => {
+        setSelectedShift(shift)
         setModalVisible(true);
     };
 
@@ -52,7 +54,7 @@ const Home = () => {
             await setShiftList(currentDate);
         }
         listShifts();
-    }, [currentDate]);
+    }, [currentDate, shifts]);
 
     return (
         <View style={styles.container}>
@@ -74,7 +76,7 @@ const Home = () => {
 
             {
                 (shifts && shifts.length > 0) ? shifts.map((shift) => (
-                    <TouchableOpacity style={styles.shift} key={shift._id.$oid} onPress={openModal}>
+                    <TouchableOpacity style={styles.shift} key={shift._id.$oid} onPress={() => openModal(shift)}>
 
                         <View style={styles.projectName}>
                             {
@@ -93,8 +95,11 @@ const Home = () => {
                             }
                             <Text>{shift.project}</Text>
                         </View>
-                        <View>
-                            <Text>{moment(shift.startShift).format('HH:mm')}</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text>{moment(shift.startShift).format('HH:mm')}h</Text>
+                            {shift.finished ?
+                                <Text> às {moment(shift.endShift).format('HH:mm')}h</Text>
+                                : null}
                         </View>
 
                         <View>
@@ -127,7 +132,7 @@ const Home = () => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <NewShift setModalVisible={setModalVisible} />
+                        <NewShift shift={selectedShift} setModalVisible={setModalVisible} />
                     </View>
                 </View>
             </Modal>

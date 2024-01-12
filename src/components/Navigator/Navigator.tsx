@@ -27,7 +27,7 @@ function NonLoggedInNavigator({ setIsLoggedIn }) {
 // StackNavigator para a área logada
 const LoggedInStack = createNativeStackNavigator();
 
-function LoggedInNavigator({ user }) {
+function LoggedInNavigator() {
     return (
         <LoggedInStack.Navigator>
             <LoggedInStack.Screen name="HOME" component={Home} />
@@ -42,7 +42,7 @@ function AppNavigator({ setIsLoggedIn, user }) {
     return (
         user ?
             (<>
-                <LoggedInNavigator user={user} />
+                <LoggedInNavigator />
                 <BottomNavigation />
             </>) :
             (

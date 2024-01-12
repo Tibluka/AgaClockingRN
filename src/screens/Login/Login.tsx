@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { HML } from '../../../config';
+import { LoadingStore } from '../../zustand/Loading';
 import { UserStore } from '../../zustand/User';
 import { styles } from './Login.styles';
 
@@ -12,10 +14,11 @@ const Login = ({ setIsLoggedIn }) => {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+    const { setLoading } = LoadingStore();
+
     const { user, setUser } = UserStore();
 
-    const validateEmail = async () => {
-        console.log(email);
+    const validateEmail = () => {
         if (email === null) {
             setEmailError('Email é obrigatório');
         } else if (!/\S+@\S+\.\S+/.test(email)) {
@@ -25,8 +28,7 @@ const Login = ({ setIsLoggedIn }) => {
         }
     };
 
-    const validatePassword = async () => {
-        console.log(password);
+    const validatePassword = () => {
         if (password === null) {
             setPasswordError('Senha é obrigatória');
         } else if (password.length < 6) {
@@ -37,23 +39,23 @@ const Login = ({ setIsLoggedIn }) => {
     };
 
     const handleLogin = async () => {
-
-        await validateEmail();
-        await validatePassword();
+        validateEmail();
+        validatePassword();
 
         if ((emailError !== null || passwordError !== null)) {
             // Lógica de envio do formulário
             return;
         } else {
             try {
-                const response = await fetch('https://agaclocking.onrender.com/login', {
+                setLoading({ state: true });
+                const response = await fetch(`${HML.API_URL}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ email, password })
                 });
-
+                setLoading({ state: false });
                 const data = await response.json();
                 if (data.token) {
                     setUser(data.user);
@@ -67,6 +69,7 @@ const Login = ({ setIsLoggedIn }) => {
                 // Você pode adicionar mais lógica aqui com base na resposta do servidor
                 console.log('Resposta do servidor:', data);
             } catch (error) {
+                setLoading({ state: false });
                 console.error('Erro ao chamar o serviço:', error);
             }
         }
