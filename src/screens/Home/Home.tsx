@@ -58,7 +58,7 @@ const Home = () => {
         }
         listShifts();
 
-    }, [currentDate, shifts]);
+    }, [currentDate]);
 
     return (
         <View style={styles.container}>
