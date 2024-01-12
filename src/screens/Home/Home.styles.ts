@@ -3,15 +3,14 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: '100%',
         backgroundColor: '#fff',
-        paddingTop: 30,
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
     title: {
         fontSize: 20,
-        height: 70
+        flex: 1,
+        textAlign: 'center'
     },
     button: {
         position: 'absolute',
@@ -32,13 +31,15 @@ export const styles = StyleSheet.create({
         width: '90%'
     },
     shift: {
-        height: 60,
+        height: 80,
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
         padding: 10,
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'gray',
         img: {
             width: 24,
             height: 24,
@@ -47,23 +48,24 @@ export const styles = StyleSheet.create({
     },
     projectName: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        maxWidth: 110
     },
     header: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 24
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'gray',
+        width: '100%'
     },
     arrowRight: {
         width: 16,
         height: 16,
-        transform: [{ rotate: '180deg' }],
-        marginLeft: 48
+        transform: [{ rotate: '180deg' }]
     },
     arrowLeft: {
         width: 16,
-        height: 16,
-        marginRight: 48
+        height: 16
     }
 });

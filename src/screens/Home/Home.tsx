@@ -59,7 +59,7 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={{ width: 70, height: 50 }} onPress={() => { changeDate('previous') }}>
+                <TouchableOpacity style={{ flex: 1, height: 100, justifyContent: 'center', alignItems: 'center' }} onPress={() => { changeDate('previous') }}>
                     <Image style={styles.arrowLeft}
                         source={require('../../assets/icon/arrow-left.png')}
                     />
@@ -67,7 +67,7 @@ const Home = () => {
 
                 <Text style={styles.title}>{moment(currentDate).format('ddd DD/MM/YYYY')}</Text>
 
-                <TouchableOpacity style={{ width: 70, height: 50 }} onPress={() => { changeDate('next') }}>
+                <TouchableOpacity style={{ flex: 1, height: 100, justifyContent: 'center', alignItems: 'center' }} onPress={() => { changeDate('next') }}>
                     <Image style={styles.arrowRight}
                         source={require('../../assets/icon/arrow-left.png')}
                     />
@@ -93,7 +93,7 @@ const Home = () => {
                                         />
                                     )
                             }
-                            <Text>{shift.project}</Text>
+                            <Text numberOfLines={1} ellipsizeMode='tail'>{shift.project}</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                             <Text>{moment(shift.startShift).format('HH:mm')}h</Text>
