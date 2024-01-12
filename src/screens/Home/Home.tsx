@@ -4,7 +4,9 @@ import 'moment/locale/pt-br'; // Importa a localização para português do Bras
 import React, { useEffect, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import NewShift from '../../components/NewShift/NewShift';
+import Spinner from '../../components/Spinner/Spinner';
 import { useShift } from '../../hooks/Shift.hook';
+import { LoadingStore } from '../../zustand/Loading';
 import { ShiftStore } from '../../zustand/Shift';
 import { styles } from './Home.styles';
 
@@ -18,6 +20,7 @@ const Home = () => {
     const [selectedShift, setSelectedShift] = useState(null);
 
     const { setShiftList } = useShift();
+    const { loading } = LoadingStore();
 
     const openModal = (shift) => {
         setSelectedShift(shift)
@@ -54,6 +57,7 @@ const Home = () => {
             await setShiftList(currentDate);
         }
         listShifts();
+
     }, [currentDate, shifts]);
 
     return (
@@ -75,47 +79,51 @@ const Home = () => {
             </View>
 
             {
-                (shifts && shifts.length > 0) ? shifts.map((shift) => (
-                    <TouchableOpacity style={styles.shift} key={shift._id.$oid} onPress={() => openModal(shift)}>
+                loading.state === true && !loading.blockBackground ?
+                    <Spinner /> :
+                    (
+                        shifts && shifts.length > 0 ? shifts.map((shift) => (
+                            <TouchableOpacity style={styles.shift} key={shift._id.$oid} onPress={() => openModal(shift)}>
 
-                        <View style={styles.projectName}>
-                            {
-                                !shift.finished ?
-                                    (
-                                        <Image style={styles.shift.img}
-                                            source={require('../../assets/icon/power-off.png')}
-                                        />
-                                    )
-                                    :
-                                    (
-                                        <Image style={styles.shift.img}
-                                            source={require('../../assets/icon/check.png')}
-                                        />
-                                    )
-                            }
-                            <Text numberOfLines={1} ellipsizeMode='tail'>{shift.project}</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text>{moment(shift.startShift).format('HH:mm')}h</Text>
-                            {shift.finished ?
-                                <Text> às {moment(shift.endShift).format('HH:mm')}h</Text>
-                                : null}
-                        </View>
+                                <View style={styles.projectName}>
+                                    {
+                                        !shift.finished ?
+                                            (
+                                                <Image style={styles.shift.img}
+                                                    source={require('../../assets/icon/power-off.png')}
+                                                />
+                                            )
+                                            :
+                                            (
+                                                <Image style={styles.shift.img}
+                                                    source={require('../../assets/icon/check.png')}
+                                                />
+                                            )
+                                    }
+                                    <Text numberOfLines={1} ellipsizeMode='tail'>{shift.project}</Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text>{moment(shift.startShift).format('HH:mm')}h</Text>
+                                    {shift.finished ?
+                                        <Text> às {moment(shift.endShift).format('HH:mm')}h</Text>
+                                        : null}
+                                </View>
 
-                        <View>
-                            {
-                                shift.finished ?
-                                    (<Text>{calculateDifference(shift.startShift, shift.endShift)}</Text>)
-                                    :
-                                    (<Text>Em aberto</Text>)
-                            }
-                        </View>
+                                <View>
+                                    {
+                                        shift.finished ?
+                                            (<Text>{calculateDifference(shift.startShift, shift.endShift)}</Text>)
+                                            :
+                                            (<Text>Em aberto</Text>)
+                                    }
+                                </View>
 
-                    </TouchableOpacity>
-                )) :
-                    <View>
-                        <Text>Nenhum turno registrado</Text>
-                    </View>
+                            </TouchableOpacity>
+                        )) :
+                            <View style={{ marginVertical: 24 }}>
+                                <Text>Nenhum turno registrado</Text>
+                            </View>
+                    )
             }
 
             <TouchableOpacity style={styles.button} onPress={openModal}>

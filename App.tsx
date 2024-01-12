@@ -13,9 +13,9 @@ import { UserStore } from './src/zustand/User';
 } */
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [setIsLoggedIn] = useState<boolean>(false);
   const { user, setUser } = UserStore();
-  const { loading, setLoading } = LoadingStore();
+  const { loading } = LoadingStore();
   const [renderApp, setRenderApp] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {loading && loading.state === true ? <Loading /> : null}
+      {loading && loading.state === true && loading.blockBackground === true ? <Loading /> : null}
       <NavigationContainer>
         {/* Passe o estado de login para o AppNavigator */}
         <AppNavigator setIsLoggedIn={setIsLoggedIn} user={user} />

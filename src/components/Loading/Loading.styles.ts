@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         position: 'absolute',
         height: '110%',
-        backgroundColor: 'gray',
+        backgroundColor: '#74799ea8',
         opacity: 0.4,
         flex: 1,
         zIndex: 999

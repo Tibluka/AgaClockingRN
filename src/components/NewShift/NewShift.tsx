@@ -21,12 +21,14 @@ class Form {
     totalTimeInMinutes: number;
     overnight: boolean = false;
     total: string;
+    finished: boolean;
 
     constructor(userId: string, startShift: string, endShift: string, project: string, activity: string, shiftId?: string) {
         this.userId = userId;
         this.startShift = startShift;
         if (!shiftId) {
             this.project = project;
+            this.finished = false;
         }
         this.activity = activity;
         if (endShift) this.endShift = endShift;
@@ -45,15 +47,15 @@ const NewShift = ({ shift, setModalVisible }: any) => {
 
     const [startShiftHour, setStartShiftHour] = useState(shift ? moment(shift.startShift).hours() : null);
     const [startShiftMinute, setStartShiftMinute] = useState(shift ? moment(shift.startShift).minutes() : null);
-    const [endShiftHour, setEndShiftHour] = useState(shift ? moment(shift.endShift).hours() : null);
-    const [endShiftMinute, setEndShiftMinute] = useState(shift ? moment(shift.endShift).minutes() : null);
+    const [endShiftHour, setEndShiftHour] = useState(shift ? moment(new Date()).hours() : null);
+    const [endShiftMinute, setEndShiftMinute] = useState(shift ? moment(new Date()).minutes() : null);
 
     const [userId, setUserId] = useState(shift.userId);
     const [project, setProject] = useState(shift.project);
     const [activity, setActivity] = useState(shift.activity);
 
     const [startShift, setStartShift] = useState(shift.startShift || moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
-    const [endShift, setEndShift] = useState(shift.endShift || moment(new Date()).format('YYYY-MM-DDTHH:mm:00'));
+    const [endShift, setEndShift] = useState(shift._id?.$oid ? moment(new Date()).format('YYYY-MM-DDTHH:mm:00') : "");
 
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
@@ -99,11 +101,11 @@ const NewShift = ({ shift, setModalVisible }: any) => {
             shift._id?.$oid
         );
 
-         if (shift && shift._id?.$oid) {
-             updateShift(payload);
-         } else initiateShift(payload);
- 
-         closeModal();
+        if (shift && shift._id?.$oid) {
+            updateShift(payload);
+        } else initiateShift(payload);
+
+        closeModal();
     }
 
     function closeModal() {
