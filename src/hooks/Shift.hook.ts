@@ -86,7 +86,30 @@ const useShift = () => {
         }
     }
 
-    return { setShiftList, initiateShift, updateShift };
+    const deleteShift = async (payload) => {
+        try {
+            setLoading({ state: true, blockBackground: true });
+            api.post(`delete-shift`, payload)
+                .then(async (response: any) => {
+                    const shifts = await response.data.shifts;
+                    setShift(shifts);
+                    setLoading({ state: false, blockBackground: true });
+                })
+                .catch((error: AxiosError) => {
+                    setLoading({ state: false, blockBackground: true });
+                    if (error.toJSON()['status'] === 401) {
+                        Alert.alert('Token inválido', 'Token expirado. Faça o login novamente.')
+                        setUser(null);
+                        AsyncStorage.clear();
+                    }
+                })
+
+        } catch (error) {
+
+        }
+    }
+
+    return { setShiftList, initiateShift, updateShift, deleteShift };
 }
 
 export { useShift };

@@ -60,7 +60,7 @@ const NewShift = ({ shift, setModalVisible }: any) => {
     const [hourList, setHourList] = useState([]);
     const [minuteList, setMinuteList] = useState([]);
 
-    const { initiateShift, updateShift } = useShift();
+    const { initiateShift, updateShift, deleteShift } = useShift();
 
     const handlePickerChange = (value: number, key: string) => {
 
@@ -90,6 +90,14 @@ const NewShift = ({ shift, setModalVisible }: any) => {
 
 
     };
+
+    function removeShift() {
+        const payload = {
+            shiftId: shift._id?.$oid
+        }
+        deleteShift(payload);
+        closeModal();
+    }
 
     function addShift() {
         const payload = new Form(
@@ -233,10 +241,22 @@ const NewShift = ({ shift, setModalVisible }: any) => {
                         value={activity} />
                 </View>
 
-                <TouchableOpacity style={[styles.button, { marginBottom: 12 }]} onPress={addShift}>
+                {
+                    shift && shift._id?.$oid ?
+                        <TouchableOpacity
+                            style={[styles.button, { marginBottom: 12, backgroundColor: '#e95959' }]}
+                            onPress={removeShift}>
+                            <Text style={{ color: '#fff' }}>Remover turno</Text>
+                        </TouchableOpacity> : null
+                }
+                <TouchableOpacity
+                    style={[styles.button, { marginBottom: 12 }]}
+                    onPress={addShift}>
                     <Text>{shift && shift._id?.$oid ? 'Finalizar' : 'Iniciar'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={closeModal}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={closeModal}>
                     <Text style={{ color: '#fff' }}>Cancelar</Text>
                 </TouchableOpacity>
 

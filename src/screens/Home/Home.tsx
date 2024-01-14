@@ -23,7 +23,7 @@ const Home = () => {
     const { loading } = LoadingStore();
 
     const openModal = (shift) => {
-        setSelectedShift(shift)
+        setSelectedShift(shift);
         setModalVisible(true);
     };
 
@@ -57,8 +57,7 @@ const Home = () => {
             await setShiftList(currentDate);
         }
         listShifts();
-
-    }, [currentDate]);
+    }, [currentDate, modalVisible]);
 
     return (
         <View style={styles.container}>
