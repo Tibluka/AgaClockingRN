@@ -16,7 +16,7 @@ const Login = ({ setIsLoggedIn }) => {
 
     const { setLoading } = LoadingStore();
 
-    const { user, setUser } = UserStore();
+    const { setUser } = UserStore();
 
     const validateEmail = () => {
         if (email === null) {
@@ -41,13 +41,14 @@ const Login = ({ setIsLoggedIn }) => {
     const handleLogin = async () => {
         validateEmail();
         validatePassword();
+        console.log('aqui');
 
         if ((emailError !== null || passwordError !== null)) {
             // Lógica de envio do formulário
             return;
         } else {
             try {
-                setLoading({ state: true });
+                setLoading({ state: true, blockBackground: false });
                 const response = await fetch(`${HML.API_URL}/login`, {
                     method: 'POST',
                     headers: {
@@ -55,13 +56,16 @@ const Login = ({ setIsLoggedIn }) => {
                     },
                     body: JSON.stringify({ email, password })
                 });
-                setLoading({ state: false });
+                setLoading({ state: false, blockBackground: true });
                 const data = await response.json();
                 if (data.token) {
-                    setUser(data.user);
-                    await AsyncStorage.setItem('agc_user', JSON.stringify(data.user));
-                    setIsLoggedIn(true);
+                    console.log(data.user);
                     await AsyncStorage.setItem('agc_token', data.token);
+
+                    await AsyncStorage.setItem('agc_user', JSON.stringify(data.user));
+                    /* setIsLoggedIn(true); */
+                    setUser(data.user);
+
                 } else {
                     console.error('Token não encontrado na resposta do servidor.');
                 }
@@ -69,7 +73,7 @@ const Login = ({ setIsLoggedIn }) => {
                 // Você pode adicionar mais lógica aqui com base na resposta do servidor
                 console.log('Resposta do servidor:', data);
             } catch (error) {
-                setLoading({ state: false });
+                setLoading({ state: false, blockBackground: true });
                 console.error('Erro ao chamar o serviço:', error);
             }
         }

@@ -20,6 +20,7 @@ const App = () => {
 
   useEffect(() => {
     const getUser = async () => {
+      AsyncStorage.clear()
       const user: any = await AsyncStorage.getItem('agc_user');
       if (user) {
         setUser(user);
