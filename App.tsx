@@ -7,6 +7,7 @@ import AppNavigator from './src/components/Navigator/Navigator';
 import Splash from './src/screens/Splash/Splash';
 import { LoadingStore } from './src/zustand/Loading';
 import { UserStore } from './src/zustand/User';
+import { StatusBar } from 'react-native';
 
 /* if (__DEV__) {
   import("./ReactotronConfig").then(() => console.log("Reactotron Configured")).catch((e) => console.log('AQUI ERRO', e));
@@ -20,7 +21,6 @@ const App = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      AsyncStorage.clear()
       const user: any = await AsyncStorage.getItem('agc_user');
       if (user) {
         setUser(user);
@@ -36,6 +36,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar translucent backgroundColor="#606585" />
       {loading && loading.state === true && loading.blockBackground === true ? <Loading /> : null}
       <NavigationContainer>
         {/* Passe o estado de login para o AppNavigator */}

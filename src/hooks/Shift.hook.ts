@@ -15,17 +15,17 @@ const useShift = () => {
     const setShiftList = async (date: string) => {
 
         try {
-            /*  setLoading({ state: true, blockBackground: false }); */
+             setLoading({ state: true, blockBackground: false });
             const user = JSON.parse(await AsyncStorage.getItem('agc_user'));
 
             api.get(`list-shifts?date=${date}&userId=${user.id}`)
                 .then(async (response: any) => {
                     const shifts = await response.data.shifts;
                     setShift(shifts);
-                    /* setLoading({ state: false, blockBackground: false }); */
+                    setLoading({ state: false, blockBackground: false });
                 })
                 .catch((error: AxiosError) => {
-                    /*  setLoading({ state: false, blockBackground: false }); */
+                     setLoading({ state: false, blockBackground: false });
 
                     if (error.toJSON()['status'] === 401) {
                         Alert.alert('Token inválido', 'Token expirado. Faça o login novamente.')
