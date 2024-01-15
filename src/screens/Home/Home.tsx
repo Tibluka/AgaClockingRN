@@ -9,9 +9,11 @@ import { useShift } from '../../hooks/Shift.hook';
 import { LoadingStore } from '../../zustand/Loading';
 import { ShiftStore } from '../../zustand/Shift';
 import { styles } from './Home.styles';
+import io from 'socket.io-client';
 
 
 const Home = () => {
+    const socket = io('http://192.168.15.69:6001');
     moment.locale('pt-br'); // Define a localização como português do Brasil
     const [modalVisible, setModalVisible] = useState(false);
     const { shifts } = ShiftStore();
@@ -41,6 +43,10 @@ const Home = () => {
         setCurrentDate(moment(newDate).format('YYYY-MM-DD'));
     }
 
+    function onSend() {
+        socket.emit('message', 'mensagem cliente')
+    }
+
     const calculateDifference = (startShiftDate, endShiftDate) => {
         const startShift = moment(startShiftDate);
         const endShift = moment(endShiftDate);
@@ -57,6 +63,31 @@ const Home = () => {
             await setShiftList(currentDate);
         }
         listShifts();
+
+        // Evento para manipular a conexão bem-sucedida
+        socket.on('connect', () => {
+            console.log('Conectado ao servidor WebSocket');
+        });
+
+        // Evento para manipular a desconexão
+        socket.on('disconnect', () => {
+            console.log('Desconectado do servidor WebSocket');
+        });
+
+        // Evento personalizado para receber mensagens do servidor
+        socket.on('server_response', (data) => {
+            console.log('Mensagem do servidor:', data);
+        });
+
+        socket.on('message', (msg) => {
+            console.log('message received fro mserver', msg);
+        });
+
+        // ComponentWillUnmount - desconecta o socket quando o componente é desmontado
+        return () => {
+            socket.disconnect();
+        };
+
     }, [currentDate, modalVisible]);
 
     return (
@@ -125,7 +156,7 @@ const Home = () => {
                     )
             }
 
-            <TouchableOpacity style={styles.button} onPress={openModal}>
+            <TouchableOpacity style={styles.button} onPress={onSend}>
                 <Image
                     source={require('../../assets/icon/add-shift.png')}
                 />
